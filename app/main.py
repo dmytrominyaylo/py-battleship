@@ -29,21 +29,13 @@ class Ship:
             for row in range(start[0], end[0] + 1):
                 self.decks.append(Deck(row, start[1]))
 
-    def get_deck(
-            self,
-            row: int,
-            column: int
-    ) -> Deck | None:
+    def get_deck(self, row: int, column: int) -> Deck | None:
         for deck in self.decks:
             if deck.row == row and deck.column == column:
                 return deck
         return None
 
-    def fire(
-            self,
-            row: int,
-            column: int
-    ) -> str:
+    def fire(self, row: int, column: int) -> str:
         deck = self.get_deck(row, column)
         if deck:
             deck.hit()
@@ -66,11 +58,9 @@ class Battleship:
             self.ships.append(ship)
             for deck in ship.decks:
                 self.field[(deck.row, deck.column)] = ship
+        self._validate_field()
 
-    def fire(
-            self,
-            location: tuple[int, int]
-    ) -> str:
+    def fire(self, location: tuple[int, int]) -> str:
         if location in self.field:
             return self.field[location].fire(*location)
         return "Miss!"
@@ -82,10 +72,11 @@ class Battleship:
                 if deck.is_alive:
                     grid[deck.row][deck.column] = "□"
                 else:
-                    grid[deck.row][deck.column] = \
-                        ("x" if ship.is_drowned else "*")
-            for row in grid:
-                print(" ".join(row))
+                    grid[deck.row][deck.column] = (
+                        "x" if ship.is_drowned else "*"
+                    )
+        for row in grid:
+            print(" ".join(row))
 
     def _validate_field(self) -> None:
         if len(self.ships) != 10:
